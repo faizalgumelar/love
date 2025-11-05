@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Animasi Teks Mengelilingi Bentuk Hati - Lebih Lambat</title>
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+  
+  .container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+  }
+  
+  .container span {
+    position: absolute;
+    color: #ffb6c1;
+    font-weight: bold;
+    font-size: 12px;
+    user-select: none;
+    white-space: nowrap;
+    filter: drop-shadow(0 0 3px #ff69b4);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+</style>
+</head>
+<body>
+  <div class="container" id="container"></div>
+
+<script>
+  const container = document.getElementById('container');
+  const totalTexts = 80;
+  const radiusScale = 14;
+  const texts = [];
+
+  function heart(t) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+    return { x, y };
+  }
+
+  for(let i = 0; i < totalTexts; i++) {
+    const span = document.createElement('span');
+    span.textContent = 'I Love You';
+    container.appendChild(span);
+    texts.push(span);
+  }
+
+  let animationProgress = 0;
+
+  function animate() {
+    // Turunkan kecepatan animasi dengan nilai lebih kecil
+    animationProgress += 0.003;  // Dahulu 0.008, sekarang lebih lambat
+    
+    texts.forEach((span, i) => {
+      const t = (animationProgress + i / totalTexts) * 2 * Math.PI;
+      const pos = heart(t);
+
+      const x = 200 + pos.x * radiusScale;
+      const y = 200 - pos.y * radiusScale;
+
+      span.style.left = `${x}px`;
+      span.style.top = `${y}px`;
+
+      // Opacity agar lebih menarik
+      const opacity = 0.5 + 0.5 * Math.sin(t * 5);
+      span.style.opacity = opacity.toFixed(2);
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+</body>
+</html>
